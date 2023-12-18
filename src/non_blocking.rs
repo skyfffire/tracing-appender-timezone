@@ -14,9 +14,9 @@
 //! This function returns the default configuration. It is equivalent to:
 //!
 //! ```rust
-//! # use tracing_appender::non_blocking::{NonBlocking, WorkerGuard};
+//! # use tracing_appender_timezone::non_blocking::{NonBlocking, WorkerGuard};
 //! # fn doc() -> (NonBlocking, WorkerGuard) {
-//! tracing_appender::non_blocking(std::io::stdout())
+//! tracing_appender_timezone::non_blocking(std::io::stdout())
 //! # }
 //! ```
 //! [builder]: NonBlockingBuilder::default()
@@ -39,9 +39,9 @@
 //!
 //! ``` rust
 //! # fn docs() {
-//! let (non_blocking, _guard) = tracing_appender::non_blocking(std::io::stdout());
+//! let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(std::io::stdout());
 //! let collector = tracing_subscriber::fmt().with_writer(non_blocking);
-//! tracing::collect::with_default(collector.finish(), || {
+//! tracing::subscriber::with_default(collector.finish(), || {
 //!    tracing::event!(tracing::Level::INFO, "Hello");
 //! });
 //! # }
@@ -90,9 +90,9 @@ pub const DEFAULT_BUFFERED_LINES_LIMIT: usize = 128_000;
 /// # #[clippy::allow(needless_doctest_main)]
 /// fn main () {
 /// # fn doc() {
-///     let (non_blocking, _guard) = tracing_appender::non_blocking(std::io::stdout());
+///     let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(std::io::stdout());
 ///     let collector = tracing_subscriber::fmt().with_writer(non_blocking);
-///     tracing::collect::with_default(collector.finish(), || {
+///     tracing::subscriber::with_default(collector.finish(), || {
 ///         // Emit some tracing events within context of the non_blocking `_guard` and tracing subscriber
 ///         tracing::event!(tracing::Level::INFO, "Hello");
 ///     });
@@ -487,7 +487,7 @@ mod test {
             let cloned_non_blocking = non_blocking.clone();
             join_handles.push(thread::spawn(move || {
                 let collector = tracing_subscriber::fmt().with_writer(cloned_non_blocking);
-                tracing::collect::with_default(collector.finish(), || {
+                tracing::subscriber::with_default(collector.finish(), || {
                     tracing::event!(tracing::Level::INFO, "Hello");
                 });
             }));

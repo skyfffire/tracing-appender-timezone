@@ -1,13 +1,13 @@
 [package]
-name = "tracing-appender"
-version = "0.2.0"
+name = "tracing-appender-timezone"
+version = "0.1.0"
 authors = [
     "Zeki Sherif <zekshi@amazon.com>",
     "Tokio Contributors <team@tokio.rs>"
 ]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/tokio-rs/tracing"
+repository = "https://github.com/skyfffire/tracing-appender-timezone"
 homepage = "https://tokio.rs"
 description = """
 Provides utilities for file appenders and making non-blocking writers.
@@ -16,7 +16,7 @@ categories = [
     "development-tools::debugging",
     "asynchronous",
 ]
-keywords = ["logging", "tracing", "file-appender", "non-blocking-writer"]
+keywords = ["logging", "tracing", "file-appender", "non-blocking-writer", "timezone"]
 edition = "2018"
 rust-version = "1.53.0"
 
@@ -25,16 +25,11 @@ crossbeam-channel = "0.5.5"
 time = { version = "0.3.2", default-features = false, features = ["formatting", "parsing"] }
 parking_lot = { optional = true, version = "0.12.1" }
 thiserror = "1.0.31"
-
-[dependencies.tracing-subscriber]
-path = "../tracing-subscriber"
-version = "0.3"
-default-features = false
-features = ["fmt", "std"]
+tracing-subscriber = { version = "0.3.17", default-features = false, features = ["fmt", "std"] }
 
 [dev-dependencies]
 criterion = { version = "0.3.6", default_features = false }
-tracing = { path = "../tracing", version = "0.2" }
+tracing = "0.1.40"
 time = { version = "0.3.2", default-features = false, features = ["formatting", "parsing"] }
 tempfile = "3.3.0"
 

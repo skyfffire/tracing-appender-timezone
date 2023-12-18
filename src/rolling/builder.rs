@@ -69,7 +69,7 @@ impl Builder {
     ///
     /// ```
     /// # fn docs() {
-    /// use tracing_appender::rolling::{Rotation, RollingFileAppender};
+    /// use tracing_appender_timezone::rolling::{Rotation, RollingFileAppender};
     ///
     /// let appender = RollingFileAppender::builder()
     ///     .rotation(Rotation::HOURLY) // rotate log files once every hour
@@ -98,7 +98,7 @@ impl Builder {
     /// Setting a prefix:
     ///
     /// ```
-    /// use tracing_appender::rolling::RollingFileAppender;
+    /// use tracing_appender_timezone::rolling::RollingFileAppender;
     ///
     /// # fn docs() {
     /// let appender = RollingFileAppender::builder()
@@ -113,7 +113,7 @@ impl Builder {
     /// No prefix:
     ///
     /// ```
-    /// use tracing_appender::rolling::RollingFileAppender;
+    /// use tracing_appender_timezone::rolling::RollingFileAppender;
     ///
     /// # fn docs() {
     /// let appender = RollingFileAppender::builder()
@@ -150,7 +150,7 @@ impl Builder {
     /// Setting a suffix:
     ///
     /// ```
-    /// use tracing_appender::rolling::RollingFileAppender;
+    /// use tracing_appender_timezone::rolling::RollingFileAppender;
     ///
     /// # fn docs() {
     /// let appender = RollingFileAppender::builder()
@@ -165,7 +165,7 @@ impl Builder {
     /// No suffix:
     ///
     /// ```
-    /// use tracing_appender::rolling::RollingFileAppender;
+    /// use tracing_appender_timezone::rolling::RollingFileAppender;
     ///
     /// # fn docs() {
     /// let appender = RollingFileAppender::builder()
@@ -218,7 +218,7 @@ impl Builder {
     /// # Examples
     ///
     /// ```
-    /// use tracing_appender::rolling::RollingFileAppender;
+    /// use tracing_appender_timezone::rolling::RollingFileAppender;
     ///
     /// # fn docs() {
     /// let appender = RollingFileAppender::builder()
@@ -243,7 +243,7 @@ impl Builder {
     /// # Examples
     ///
     /// ```
-    /// use tracing_appender::rolling::RollingFileAppender;
+    /// use tracing_appender_timezone::rolling::RollingFileAppender;
     ///
     /// # fn docs() {
     /// let appender = RollingFileAppender::builder()
@@ -270,7 +270,7 @@ impl Builder {
     /// # Examples
     ///
     /// ```
-    /// use tracing_appender::rolling::{Rotation, RollingFileAppender};
+    /// use tracing_appender_timezone::rolling::{Rotation, RollingFileAppender};
     ///
     /// # fn docs() {
     /// let appender = RollingFileAppender::builder()
@@ -285,7 +285,7 @@ impl Builder {
     /// This is equivalent to
     /// ```
     /// # fn docs() {
-    /// let appender = tracing_appender::rolling::daily("myapp.log", "/var/log/myapp");
+    /// let appender = tracing_appender_timezone::rolling::daily("myapp.log", "/var/log/myapp");
     /// # drop(appender);
     /// # }
     /// ```

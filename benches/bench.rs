@@ -4,7 +4,7 @@ use std::{
     time::Instant,
 };
 use tracing::{event, Level};
-use tracing_appender::non_blocking;
+use tracing_appender_timezone::non_blocking;
 use tracing_subscriber::fmt::MakeWriter;
 
 // a no-op writer is used in order to measure the overhead incurred by
@@ -40,7 +40,7 @@ fn synchronous_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("synchronous");
     group.bench_function("single_thread", |b| {
         let subscriber = tracing_subscriber::fmt().with_writer(NoOpWriter::new());
-        tracing::collect::with_default(subscriber.finish(), || {
+        tracing::subscriber::with_default(subscriber.finish(), || {
             b.iter(|| event!(Level::INFO, "event"))
         });
     });
@@ -56,7 +56,7 @@ fn synchronous_benchmark(c: &mut Criterion) {
 
             handles.push(thread::spawn(move || {
                 let subscriber = tracing_subscriber::fmt().with_writer(make_writer);
-                tracing::collect::with_default(subscriber.finish(), || {
+                tracing::subscriber::with_default(subscriber.finish(), || {
                     for _ in 0..iters {
                         event!(Level::INFO, "event");
                     }
@@ -65,7 +65,7 @@ fn synchronous_benchmark(c: &mut Criterion) {
 
             handles.push(thread::spawn(move || {
                 let subscriber = tracing_subscriber::fmt().with_writer(cloned_make_writer);
-                tracing::collect::with_default(subscriber.finish(), || {
+                tracing::subscriber::with_default(subscriber.finish(), || {
                     for _ in 0..iters {
                         event!(Level::INFO, "event");
                     }
@@ -88,7 +88,7 @@ fn non_blocking_benchmark(c: &mut Criterion) {
         let (non_blocking, _guard) = non_blocking(NoOpWriter::new());
         let subscriber = tracing_subscriber::fmt().with_writer(non_blocking);
 
-        tracing::collect::with_default(subscriber.finish(), || {
+        tracing::subscriber::with_default(subscriber.finish(), || {
             b.iter(|| event!(Level::INFO, "event"))
         });
     });
@@ -105,7 +105,7 @@ fn non_blocking_benchmark(c: &mut Criterion) {
 
             handles.push(thread::spawn(move || {
                 let subscriber = tracing_subscriber::fmt().with_writer(non_blocking);
-                tracing::collect::with_default(subscriber.finish(), || {
+                tracing::subscriber::with_default(subscriber.finish(), || {
                     for _ in 0..iters {
                         event!(Level::INFO, "event");
                     }
@@ -114,7 +114,7 @@ fn non_blocking_benchmark(c: &mut Criterion) {
 
             handles.push(thread::spawn(move || {
                 let subscriber = tracing_subscriber::fmt().with_writer(cloned_make_writer);
-                tracing::collect::with_default(subscriber.finish(), || {
+                tracing::subscriber::with_default(subscriber.finish(), || {
                     for _ in 0..iters {
                         event!(Level::INFO, "event");
                     }

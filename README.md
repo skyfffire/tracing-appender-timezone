@@ -62,7 +62,7 @@ This crate can be used in a few ways to record spans/events:
 
 ```rust
 fn main(){
-    let file_appender = tracing_appender::rolling::hourly("/some/directory", "prefix.log");
+    let file_appender = tracing_appender_timezone::rolling::hourly("/some/directory", "prefix.log");
 }
 ```
 This creates an hourly rotating file appender that writes to 
@@ -100,22 +100,22 @@ impl std::io::Write for TestWriter {
 }
 
 fn main() {
-    let (non_blocking, _guard) = tracing_appender::non_blocking(TestWriter);
+    let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(TestWriter);
     tracing_subscriber::fmt().with_writer(non_blocking).init();
 }
 ```
 **Note:** `_guard` is a [`WorkerGuard`][guard] which is returned by 
-`tracing_appender::non_blocking` to ensure buffered logs are flushed to 
+`tracing_appender_timezone::non_blocking` to ensure buffered logs are flushed to 
 their output in the case of abrupt terminations of a process. See 
 [`WorkerGuard`][guard] module for more details.
 
 The example below demonstrates the construction of a 
-[`tracing_appender::non_blocking`][non_blocking] writer constructed with 
+[`tracing_appender_timezone::non_blocking`][non_blocking] writer constructed with 
 a [`std::io::Write`][write]:
 
 ```rust
 fn main() {
-    let (non_blocking, _guard) = tracing_appender::non_blocking(std::io::stdout());
+    let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(std::io::stdout());
     tracing_subscriber::fmt()
         .with_writer(non_blocking)
         .init();
@@ -129,8 +129,8 @@ use `non_blocking`.
 
 ```rust
 fn main() {
-    let file_appender = tracing_appender::rolling::hourly("/some/directory", "prefix.log");
-    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+    let file_appender = tracing_appender_timezone::rolling::hourly("/some/directory", "prefix.log");
+    let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(file_appender);
    tracing_subscriber::fmt()
        .with_writer(non_blocking)
        .init();

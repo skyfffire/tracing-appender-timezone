@@ -22,7 +22,7 @@
 //!
 //! ```rust
 //! # fn docs() {
-//! use tracing_appender::rolling::{RollingFileAppender, Rotation};
+//! use tracing_appender_timezone::rolling::{RollingFileAppender, Rotation};
 //! let file_appender = RollingFileAppender::new(Rotation::HOURLY, "/some/directory", "prefix.log");
 //! # }
 //! ```
@@ -58,7 +58,7 @@ pub use builder::{Builder, InitError};
 ///
 /// ```rust
 /// # fn docs() {
-/// let file_appender = tracing_appender::rolling::hourly("/some/directory", "prefix");
+/// let file_appender = tracing_appender_timezone::rolling::hourly("/some/directory", "prefix");
 /// # }
 /// ```
 ///
@@ -69,7 +69,7 @@ pub use builder::{Builder, InitError};
 /// use tracing_subscriber::fmt::writer::MakeWriterExt;
 ///
 /// // Log all events to a rolling log file.
-/// let logfile = tracing_appender::rolling::hourly("/logs", "myapp-logs");
+/// let logfile = tracing_appender_timezone::rolling::hourly("/logs", "myapp-logs");
 
 /// // Log `INFO` and above to stdout.
 /// let stdout = std::io::stdout.with_max_level(tracing::Level::INFO);
@@ -100,6 +100,7 @@ pub struct RollingFileAppender {
 pub struct RollingWriter<'a>(RwLockReadGuard<'a, File>);
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct Inner {
     log_directory: PathBuf,
     log_filename_prefix: Option<String>,
@@ -135,7 +136,7 @@ impl RollingFileAppender {
     ///
     /// ```rust
     /// # fn docs() {
-    /// use tracing_appender::rolling::{RollingFileAppender, Rotation};
+    /// use tracing_appender_timezone::rolling::{RollingFileAppender, Rotation};
     /// let file_appender = RollingFileAppender::new(Rotation::HOURLY, "/some/directory", "prefix.log");
     /// # }
     /// ```
@@ -169,7 +170,7 @@ impl RollingFileAppender {
     ///
     /// ```rust
     /// # fn docs() {
-    /// use tracing_appender::rolling::{RollingFileAppender, Rotation};
+    /// use tracing_appender_timezone::rolling::{RollingFileAppender, Rotation};
     ///
     /// let file_appender = RollingFileAppender::builder()
     ///     .rotation(Rotation::HOURLY) // rotate log files once every hour
@@ -222,7 +223,7 @@ impl RollingFileAppender {
         return (self.now)();
 
         #[cfg(not(test))]
-        OffsetDateTime::now_utc().to_offset(self.state.offset)
+        return OffsetDateTime::now_utc().to_offset(self.state.offset)
     }
 }
 
@@ -286,12 +287,12 @@ impl fmt::Debug for RollingFileAppender {
 /// # #[clippy::allow(needless_doctest_main)]
 /// fn main () {
 /// # fn doc() {
-///     let appender = tracing_appender::rolling::minutely("/some/path", "rolling.log");
-///     let (non_blocking_appender, _guard) = tracing_appender::non_blocking(appender);
+///     let appender = tracing_appender_timezone::rolling::minutely("/some/path", "rolling.log");
+///     let (non_blocking_appender, _guard) = tracing_appender_timezone::non_blocking(appender);
 ///
 ///     let collector = tracing_subscriber::fmt().with_writer(non_blocking_appender);
 ///
-///     tracing::collect::with_default(collector.finish(), || {
+///     tracing::subscriber::with_default(collector.finish(), || {
 ///         tracing::event!(tracing::Level::INFO, "Hello");
 ///     });
 /// # }
@@ -321,12 +322,12 @@ pub fn minutely(
 /// # #[clippy::allow(needless_doctest_main)]
 /// fn main () {
 /// # fn doc() {
-///     let appender = tracing_appender::rolling::hourly("/some/path", "rolling.log");
-///     let (non_blocking_appender, _guard) = tracing_appender::non_blocking(appender);
+///     let appender = tracing_appender_timezone::rolling::hourly("/some/path", "rolling.log");
+///     let (non_blocking_appender, _guard) = tracing_appender_timezone::non_blocking(appender);
 ///
 ///     let collector = tracing_subscriber::fmt().with_writer(non_blocking_appender);
 ///
-///     tracing::collect::with_default(collector.finish(), || {
+///     tracing::subscriber::with_default(collector.finish(), || {
 ///         tracing::event!(tracing::Level::INFO, "Hello");
 ///     });
 /// # }
@@ -357,12 +358,12 @@ pub fn hourly(
 /// # #[clippy::allow(needless_doctest_main)]
 /// fn main () {
 /// # fn doc() {
-///     let appender = tracing_appender::rolling::daily("/some/path", "rolling.log");
-///     let (non_blocking_appender, _guard) = tracing_appender::non_blocking(appender);
+///     let appender = tracing_appender_timezone::rolling::daily("/some/path", "rolling.log");
+///     let (non_blocking_appender, _guard) = tracing_appender_timezone::non_blocking(appender);
 ///
 ///     let collector = tracing_subscriber::fmt().with_writer(non_blocking_appender);
 ///
-///     tracing::collect::with_default(collector.finish(), || {
+///     tracing::subscriber::with_default(collector.finish(), || {
 ///         tracing::event!(tracing::Level::INFO, "Hello");
 ///     });
 /// # }
@@ -391,12 +392,12 @@ pub fn daily(
 /// # #[clippy::allow(needless_doctest_main)]
 /// fn main () {
 /// # fn doc() {
-///     let appender = tracing_appender::rolling::never("/some/path", "non-rolling.log");
-///     let (non_blocking_appender, _guard) = tracing_appender::non_blocking(appender);
+///     let appender = tracing_appender_timezone::rolling::never("/some/path", "non-rolling.log");
+///     let (non_blocking_appender, _guard) = tracing_appender_timezone::non_blocking(appender);
 ///
 ///     let collector = tracing_subscriber::fmt().with_writer(non_blocking_appender);
 ///
-///     tracing::collect::with_default(collector.finish(), || {
+///     tracing::subscriber::with_default(collector.finish(), || {
 ///         tracing::event!(tracing::Level::INFO, "Hello");
 ///     });
 /// # }
@@ -415,32 +416,32 @@ pub fn never(directory: impl AsRef<Path>, file_name: impl AsRef<Path>) -> Rollin
 /// ### Minutely Rotation
 /// ```rust
 /// # fn docs() {
-/// use tracing_appender::rolling::Rotation;
-/// let rotation = tracing_appender::rolling::Rotation::MINUTELY;
+/// use tracing_appender_timezone::rolling::Rotation;
+/// let rotation = tracing_appender_timezone::rolling::Rotation::MINUTELY;
 /// # }
 /// ```
 ///
 /// ### Hourly Rotation
 /// ```rust
 /// # fn docs() {
-/// use tracing_appender::rolling::Rotation;
-/// let rotation = tracing_appender::rolling::Rotation::HOURLY;
+/// use tracing_appender_timezone::rolling::Rotation;
+/// let rotation = tracing_appender_timezone::rolling::Rotation::HOURLY;
 /// # }
 /// ```
 ///
 /// ### Daily Rotation
 /// ```rust
 /// # fn docs() {
-/// use tracing_appender::rolling::Rotation;
-/// let rotation = tracing_appender::rolling::Rotation::DAILY;
+/// use tracing_appender_timezone::rolling::Rotation;
+/// let rotation = tracing_appender_timezone::rolling::Rotation::DAILY;
 /// # }
 /// ```
 ///
 /// ### No Rotation
 /// ```rust
 /// # fn docs() {
-/// use tracing_appender::rolling::Rotation;
-/// let rotation = tracing_appender::rolling::Rotation::NEVER;
+/// use tracing_appender_timezone::rolling::Rotation;
+/// let rotation = tracing_appender_timezone::rolling::Rotation::NEVER;
 /// # }
 /// ```
 #[derive(Clone, Eq, PartialEq, Debug)]

@@ -30,7 +30,7 @@
 //!
 //! ```rust
 //! # fn docs() {
-//! let file_appender = tracing_appender::rolling::hourly("/some/directory", "prefix.log");
+//! let file_appender = tracing_appender_timezone::rolling::hourly("/some/directory", "prefix.log");
 //! # }
 //! ```
 //! This creates an hourly rotating file appender that writes to `/some/directory/prefix.log.YYYY-MM-DD-HH`.
@@ -48,17 +48,17 @@
 //!
 //! ```rust
 //! # fn doc() {
-//! let (non_blocking, _guard) = tracing_appender::non_blocking(std::io::stdout());
+//! let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(std::io::stdout());
 //! tracing_subscriber::fmt()
 //!     .with_writer(non_blocking)
 //!     .init();
 //! # }
 //! ```
-//! **Note:** `_guard` is a [`WorkerGuard`][guard] which is returned by [`tracing_appender::non_blocking`][non_blocking]
+//! **Note:** `_guard` is a [`WorkerGuard`][guard] which is returned by [`tracing_appender_timezone::non_blocking`][non_blocking]
 //! to ensure buffered logs are flushed to their output in the case of abrupt terminations of a process.
 //! See [`WorkerGuard` module][guard] for more details.
 //!
-//! The example below demonstrates the construction of a [`tracing_appender::non_blocking`][non_blocking]
+//! The example below demonstrates the construction of a [`tracing_appender_timezone::non_blocking`][non_blocking]
 //! writer constructed with a [`std::io::Write`][write]:
 //!
 //! ```rust
@@ -79,7 +79,7 @@
 //! }
 //!
 //! # fn doc() {
-//! let (non_blocking, _guard) = tracing_appender::non_blocking(TestWriter);
+//! let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(TestWriter);
 //! tracing_subscriber::fmt()
 //!     .with_writer(non_blocking)
 //!     .init();
@@ -99,8 +99,8 @@
 //!
 //! ```rust
 //! # fn docs() {
-//! let file_appender = tracing_appender::rolling::hourly("/some/directory", "prefix.log");
-//! let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+//! let file_appender = tracing_appender_timezone::rolling::hourly("/some/directory", "prefix.log");
+//! let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(file_appender);
 //! tracing_subscriber::fmt()
 //!     .with_writer(non_blocking)
 //!     .init();
@@ -167,9 +167,9 @@ pub(crate) mod sync;
 ///
 /// ``` rust
 /// # fn docs() {
-/// let (non_blocking, _guard) = tracing_appender::non_blocking(std::io::stdout());
+/// let (non_blocking, _guard) = tracing_appender_timezone::non_blocking(std::io::stdout());
 /// let subscriber = tracing_subscriber::fmt().with_writer(non_blocking);
-/// tracing::collect::with_default(subscriber.finish(), || {
+/// tracing::subscriber::with_default(subscriber.finish(), || {
 ///    tracing::event!(tracing::Level::INFO, "Hello");
 /// });
 /// # }
